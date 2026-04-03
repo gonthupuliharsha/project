@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>City Facilities Map</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+}
+
+header{
+background:#0f172a;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.controls{
+padding:15px;
+text-align:center;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+background:#38bdf8;
+border:none;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+button:hover{
+background:#0284c7;
+}
+
+#map{
+height:600px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h2>Facilities in Visakhapatnam</h2>
+</header>
+
+<div class="controls">
+
+<button onclick="showAll()">All</button>
+
+<button onclick="filterFacilities('hospital')">Hospitals</button>
+
+<button onclick="filterFacilities('school')">Schools</button>
+
+<button onclick="filterFacilities('restaurant')">Restaurants</button>
+
+<button onclick="showHeatmap()">Heatmap</button>
+
+<button onclick="hideHeatmap()">Hide Heatmap</button>
+
+</div>
+
+<div id="map"></div>
+
+<script>
+
+let map=L.map('map').setView([17.72,83.30],12)
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(map)
+
+let markers=[]
+let heatPoints=[]
+let heatLayer=null
+
+fetch("http://127.0.0.1:5000/facilities")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+data.forEach(place=>{
+
+let lat=parseFloat(place.latitude)
+let lon=parseFloat(place.longitude)
+
+let marker=L.marker([lat,lon])
+
+.bindPopup(place.name+" ("+place.amenity+")")
+
+marker.amenity=place.amenity
+
+markers.push(marker)
+
+heatPoints.push([lat,lon,1])
+
+})
+
+showAll()
+
+})
+
+function showAll(){
+
+markers.forEach(m=>m.addTo(map))
+
+}
+
+function filterFacilities(type){
+
+markers.forEach(m=>{
+
+if(m.amenity===type){
+
+m.addTo(map)
+
+}else{
+
+map.removeLayer(m)
+
+}
+
+})
+
+}
+
+function showHeatmap(){
+
+markers.forEach(m=>map.removeLayer(m))
+
+heatLayer=L.heatLayer(heatPoints,{
+radius:25
+}).addTo(map)
+
+}
+
+function hideHeatmap(){
+
+if(heatLayer){
+map.removeLayer(heatLayer)
+}
+
+showAll()
+
+}
+
+</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+</body>
+
+</html>
+

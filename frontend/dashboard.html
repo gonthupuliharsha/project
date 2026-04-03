@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Smart Facility Planner</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* BACKGROUND */
+body{
+background:
+linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),
+url("https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b");
+background-size:cover;
+background-position:center;
+color:white;
+}
+
+/* NAVBAR */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(8px);
+}
+
+.navbar h2{
+font-weight:600;
+}
+
+.nav-links a{
+margin:0 15px;
+text-decoration:none;
+color:white;
+font-size:14px;
+transition:0.3s;
+}
+
+.nav-links a:hover{
+color:#38bdf8;
+}
+
+/* HERO SECTION */
+.hero{
+text-align:center;
+margin-top:60px;
+}
+
+.hero h1{
+font-size:36px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:14px;
+opacity:0.8;
+}
+
+/* GRID */
+.grid{
+margin-top:50px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+padding:0 60px 60px;
+}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.95);
+color:black;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+.card h3{
+margin-bottom:10px;
+}
+
+.card p{
+font-size:13px;
+opacity:0.7;
+margin-bottom:15px;
+}
+
+/* BUTTON */
+.card button{
+width:100%;
+padding:10px;
+border:none;
+background:#38bdf8;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.card button:hover{
+background:#0284c7;
+}
+
+/* FOOTER */
+.footer{
+text-align:center;
+padding:15px;
+font-size:12px;
+opacity:0.7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+<h2>Urban Planner</h2>
+
+<div class="nav-links">
+<a href="#">Home</a>
+<a href="#" onclick="logout()">Logout</a>
+</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+<h1>Smart Facility Planner</h1>
+<p>AI-powered tools for urban planning & smart city decisions</p>
+</div>
+
+<!-- FEATURES -->
+<div class="grid">
+
+<div class="card">
+<h3>📍 View Facilities</h3>
+<p>Explore hospitals, schools, and other city facilities.</p>
+<button onclick="location.href='facilities.html'">Open</button>
+</div>
+
+<div class="card">
+<h3>📊 Analyze Location</h3>
+<p>Evaluate new facility locations using AI insights.</p>
+<button onclick="location.href='analyze.html'">Analyze</button>
+</div>
+
+<div class="card">
+<h3>🗺️ Smart City Map</h3>
+<p>Visualize clusters, density and facility distribution.</p>
+<button onclick="window.location.href='smart_map.html'">View Map</button>
+</div>
+
+<div class="card">
+<h3>🤖 Recommendation Zones</h3>
+<p>Find best locations to build new facilities.</p>
+<button onclick="window.location.href='recommendation.html'">View Zones</button>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+© 2026 Smart Facility Planner | AI Powered
+</div>
+
+<script>
+
+function loadZones(){
+alert("Connect this to backend API later");
+}
+
+function logout(){
+alert("Logged out successfully");
+window.location.href="login.html";
+}
+
+</script>
+
+</body>
+
+</html>

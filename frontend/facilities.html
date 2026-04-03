@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Map | Urban Planner</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:
+linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),
+url("https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b");
+background-size:cover;
+background-position:center;
+}
+
+.back-btn{
+position:absolute;
+top:20px;
+left:20px;
+color:white;
+cursor:pointer;
+font-size:18px;
+}
+
+.container{
+max-width:1000px;
+margin:80px auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+text-align:center;
+}
+
+h2{ margin-bottom:10px; }
+p{ color:#555; margin-bottom:20px; }
+
+.card-container{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin:20px 0;
+}
+
+.card{
+background:#f8fafc;
+padding:15px 20px;
+border-radius:10px;
+cursor:pointer;
+font-weight:500;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.card:hover{
+background:#38bdf8;
+color:white;
+transform:translateY(-3px);
+}
+
+.card.active{
+background:#0284c7;
+color:white;
+}
+
+.card.disabled{
+pointer-events:none;
+opacity:0.5;
+}
+
+#map{
+height:400px;
+margin-top:20px;
+border-radius:10px;
+display:none;
+}
+
+#facilityList{
+margin-top:20px;
+max-height:250px;
+overflow-y:auto;
+text-align:left;
+}
+
+.item{
+padding:10px;
+border-bottom:1px solid #eee;
+cursor:pointer;
+}
+
+.item:hover{
+background:#f1f5f9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="back-btn" onclick="goHome()">← Back</div>
+
+<div class="container">
+
+<h2>Explore Facilities in Visakhapatnam</h2>
+
+<p>Click a category to explore facilities and their locations.</p>
+
+<div class="card-container">
+<div class="card disabled" onclick="selectFacility(event,'hospital')">🏥 Hospital</div>
+<div class="card disabled" onclick="selectFacility(event,'school')">🏫 School</div>
+<div class="card disabled" onclick="selectFacility(event,'restaurant')">🍽 Restaurant</div>
+<div class="card disabled" onclick="selectFacility(event,'pharmacy')">💊 Pharmacy</div>
+<div class="card disabled" onclick="selectFacility(event,'college')">🎓 College</div>
+<div class="card disabled" onclick="selectFacility(event,'clinic')">🏥 Clinic</div>
+<div class="card disabled" onclick="selectFacility(event,'pg')">🏠 PG</div>
+</div>
+
+<div id="map"></div>
+<div id="facilityList"></div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="js/map.js"></script>
+
+<script>
+function goHome(){
+window.location.href="index.html";
+}
+</script>
+
+</body>
+</html>

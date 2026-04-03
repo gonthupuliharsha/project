@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recommendation Zones</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+#map { height: 100vh; }
+
+.controls {
+position:absolute;
+top:10px;
+left:10px;
+background:white;
+padding:10px;
+z-index:1000;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+<select id="facility">
+<option value="hospital">Hospital</option>
+<option value="school">School</option>
+<option value="restaurant">Restaurant</option>
+<option value="pharmacy">Pharmacy</option>
+<option value="clinic">Clinic</option>
+<option value="pg">PG</option>
+</select>
+
+<button id="btn">Find Zones</button>
+</div>
+
+<div id="map"></div>
+
+<script>
+
+console.log("JS Loaded ✅");
+
+/* 🗺️ Map setup */
+let map = L.map('map').setView([17.72,83.30],12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let zoneLayers = [];
+
+/* 🔥 Button Click */
+document.getElementById("btn").addEventListener("click", function(){
+
+    console.log("Button clicked ✅");
+
+    let facility = document.getElementById("facility").value;
+
+    console.log("Facility:", facility);
+
+    console.log("Before fetch 🔥");
+
+    /* 🧹 Clear previous zones */
+    zoneLayers.forEach(layer => map.removeLayer(layer));
+    zoneLayers = [];
+
+    /* 🌐 API Call (GET) */
+   fetch("http://localhost:5000/recommendation_zones?facility=" + facility)
+
+    .then(res => {
+        console.log("Response received ✅", res);
+
+        if(!res.ok){
+            throw new Error("Server error: " + res.status);
+        }
+
+        return res.json();
+    })
+    .then(data => {
+
+        console.log("Data received:", data);
+        console.log("After fetch 🔥");
+
+        if(!data || data.length === 0){
+            alert("No zones found");
+            return;
+        }
+
+        /* 🎯 Draw zones */
+        data.forEach((z, index) => {
+
+            let color;
+
+           if(index === 0){
+    color = "purple";  // ⭐ BEST ZONE
+}
+else if(z.zone === "green"){
+    color = "green";
+}
+else if(z.zone === "yellow"){
+    color = "orange";
+}
+else{
+    color = "blue";
+}
+
+            let layer = L.circle([z.lat, z.lon], {
+                radius: index === 0 ? 2000 : 1200,
+                color: color,
+                fillOpacity: 0.4
+            })
+            .addTo(map)
+            .bindPopup(
+    "<b>Zone:</b> " + z.zone +
+    "<br><b>Population:</b> " + z.population +
+    "<br><b>Score:</b> " + z.score.toFixed(2) +
+    (index === 0 ? "<br><b>⭐ BEST LOCATION</b>" : "")
+);
+
+            zoneLayers.push(layer);
+
+        });
+
+    })
+    .catch(err => {
+        console.error("FULL ERROR:", err);
+        alert("Error occurred. Check console.");
+    });
+
+     
+});
+ 
+</script>
+
+</body>
+</html>

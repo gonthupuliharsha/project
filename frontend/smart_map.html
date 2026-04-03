@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart City Map</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Heatmap plugin -->
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<style>
+#map { height: 100vh; }
+
+.controls {
+position:absolute;
+top:10px;
+left:10px;
+background:white;
+padding:10px;
+z-index:1000;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+<button onclick="loadHeatmap()">🔥 Heatmap</button>
+<button onclick="loadFacilities()">🏥 Facilities</button>
+<button onclick="loadClusters()">🧠 Clusters</button>
+<button onclick="clearMap()">🧹 Clear</button>
+</div>
+
+<div id="map"></div>
+
+<script>
+
+let map = L.map('map').setView([17.72,83.30],12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let layers = [];
+
+/* 🔥 HEATMAP */
+function loadHeatmap(){
+
+fetch("http://127.0.0.1:5000/heatmap_data")
+.then(res=>res.json())
+.then(data=>{
+
+let heatData = data.map(p=>[p.lat,p.lon,p.weight]);
+
+let heat = L.heatLayer(heatData,{radius:25});
+heat.addTo(map);
+
+layers.push(heat);
+
+});
+
+}
+
+/* 🏥 FACILITIES */
+function loadFacilities(){
+
+fetch("http://127.0.0.1:5000/facilities")
+.then(res=>res.json())
+.then(data=>{
+
+data.forEach(f=>{
+
+let marker = L.marker([f.lat,f.lon])
+.addTo(map)
+.bindPopup(f.name || f.amenity);
+
+layers.push(marker);
+
+});
+
+});
+
+}
+
+/* 🧠 CLUSTERS (AI PART 🔥) */
+function loadClusters(){
+
+fetch("http://127.0.0.1:5000/clusters")
+.then(res=>res.json())
+.then(data=>{
+
+data.forEach(c=>{
+
+let color = getColor(c.cluster);
+
+let circle = L.circle([c.lat,c.lon],{
+radius:300,
+color:color,
+fillOpacity:0.5
+})
+.addTo(map)
+.bindPopup("Cluster: "+c.cluster);
+
+layers.push(circle);
+
+});
+
+});
+
+}
+
+/* 🎨 Cluster Colors */
+function getColor(cluster){
+
+let colors = ["red","blue","green","purple","orange","brown"];
+
+return colors[cluster % colors.length];
+
+}
+
+/* 🧹 Clear map */
+function clearMap(){
+
+layers.forEach(l=>map.removeLayer(l));
+layers = [];
+
+}
+
+</script>
+
+</body>
+</html>
